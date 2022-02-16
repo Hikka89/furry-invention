@@ -1,9 +1,8 @@
 local component = require('component')
-local me = component['me_interface']
-local redstone = component['redstone']
 local reactor = component['reactor_chamber']
+local me = component['me_interface']
 local history, durability_items = {}, {['IC2:reactorVentGold'] = 9500}
-local heating_scheme, kernels = {'plating_heat', 'quad_kernel_uran'}, {single_kernel_uran = true, quad_kernel_uran = true, quad_kernel_mox = true}
+local heating_scheme, kernels = {'plating_heat', 'quad_kernel_uran'}, {single_kernel_uran=true, quad_kernel_uran=true, quad_kernel_mox=true}
 
 local schemes_amount = {
 	heating = {
@@ -103,7 +102,7 @@ local items = {
 
 
 local function unfill_reactor()
-	for slot in pairs(reactor.getAllStacks()) do me.pullItem('UP', slot) end
+	for slot in pairs(reactor.getAllStacks()) do while me.pullItem('UP', slot) == 0 do os.sleep(0.01) end end
 end
 
 
@@ -175,6 +174,12 @@ end
 
 
 local function heating()
+	if component.isAvailable('redstone') then
+		local redstone = component['redstone']
+	else
+		print('[Нагерв] Не подключен красный камень')
+		return
+	end
 	local slot = 1
 	if is_working('heating') then
 		for _, item in pairs(heating_scheme) do
