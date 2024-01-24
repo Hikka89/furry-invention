@@ -174,8 +174,9 @@ end
 
 
 local function heating()
+	local redstone = nil
 	if component.isAvailable('redstone') then
-		local redstone = component['redstone']
+		redstone = component['redstone']
 	else
 		print('[Нагерв] Не подключен красный камень')
 		return
